@@ -135,7 +135,7 @@ public class Board {
 					{
 						if(!player1.validateDest(p1Move)) //if player 1 doesn't have a piece in destination
 						{
-							if(player2.validateDest(p1Move))
+							if(player2.validateDest(p1Move)) //if player 2 has a piece in the destination
 							{
 								System.err.println("Player 2 piece detected");
 								Move oldMove = new Move();
@@ -159,6 +159,7 @@ public class Board {
 									{
 										player2.deletePiece(oldMove);
 										player1.updatePiece(p1Move);
+										//todo: check for potential double hop
 									}
 								}
 								
@@ -213,6 +214,7 @@ public class Board {
 									{
 										player1.deletePiece(oldMove);
 										player2.updatePiece(p2Move);
+										//todo: check for potential double hop
 									}
 								}
 								

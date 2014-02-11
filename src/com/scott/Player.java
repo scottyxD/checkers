@@ -29,6 +29,7 @@ public class Player {
 	public Move makeMove()
 	{
 		Move move = new Move();
+		
 		System.out.println(playerName + ", Choose checker row number: ");
 		move.setOrigY(scanIn.nextInt());
 		System.out.println(playerName + ", Choose checker column number: ");

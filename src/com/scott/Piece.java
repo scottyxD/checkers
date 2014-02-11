@@ -29,11 +29,11 @@ public class Piece {
 	public String toString() {
 		if(pieceColor == Color.white)
 		{
-			return "o";
+			return "O";
 		}
 		else
 		{
-			return "*";
+			return "@";
 		}
 	}
 	public void setxPos(int xPos) {

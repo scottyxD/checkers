@@ -62,7 +62,7 @@ public class Player {
 	{
 		for (int i=0;i<pieces.size();i++)
 		{
-			if (pieces.get(i).getxPos()==move.getDestX())
+			if (pieces.get(i).getxPos() == move.getDestX())
 			{
 				if (pieces.get(i).getyPos() == move.getDestY())
 				{
@@ -73,35 +73,39 @@ public class Player {
 		return false;
 	}
 	
-	public void updatePiece(Move move)
+	public boolean updatePiece(Move move)
 	{
 		for (int i=0;i<pieces.size();i++)
 		{
-			if (pieces.get(i).getxPos() == move.getOrigX());
+			if (pieces.get(i).getxPos() == move.getOrigX())
 			{
 				if (pieces.get(i).getyPos() == move.getOrigY())
 				{
 					pieces.get(i).setxPos(move.getDestX());
 					pieces.get(i).setyPos(move.getDestY());
+					return true;
 				}
 			}
 		}
+		return false;
 	}
 	
-	public void deletePiece(Move move)
+	public boolean deletePiece(Move move)
 	{
 		for (int i=0;i<pieces.size();i++)
 		{
 			if (pieces.get(i).getxPos() == move.getDestX())
 			{
-				System.out.println(playerName + " " + pieces.get(i).getyPos() + " and " + move.getDestY());
 				if(pieces.get(i).getyPos() == move.getDestY())
 				{
 					pieces.remove(i);
+					return true;
 				}
 				
 			}
 		}
+		
+		return false;
 	}
 	
 }

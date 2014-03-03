@@ -111,7 +111,7 @@ public class Board {
 		player2.pieces.get(7).setyPos(6);
 		//player 2 row 3
 		player2.pieces.get(8).setxPos(1); 
-		player2.pieces.get(8).setyPos(5); 
+		player2.pieces.get(8).setyPos(5);
 		player2.pieces.get(9).setxPos(3);
 		player2.pieces.get(9).setyPos(5);
 		player2.pieces.get(10).setxPos(5);
@@ -120,13 +120,13 @@ public class Board {
 		player2.pieces.get(11).setyPos(5);
 	}
 
-	public void doPlayer1Move()
+	public void doPlayer1Move(Move p1Move)
 	{
+		boolean wentRight = false;
 		
-		Move p1Move = player1.makeMove();
 		if(player1.validateSource(p1Move)) //check if source is a piece in player 1's inventory
 		{
-			System.out.println("Player 1 has piece in inventory");
+			//System.out.println("Player 1 has piece in inventory");
 			if(p1Move.getDestY()-p1Move.getOrigY() == 1) // if destination row is greater than source
 			{
 				if(Math.abs(p1Move.getDestX()-p1Move.getOrigX()) == 1) //if dest col is ofset from source col by 1
@@ -137,7 +137,7 @@ public class Board {
 						{
 							if(player2.validateDest(p1Move)) //if player 2 has a piece in the destination
 							{
-								System.err.println("Player 2 piece detected");
+								//System.err.println("Player 2 piece detected");
 								Move oldMove = new Move();
 								oldMove.setDestX(p1Move.getDestX());
 								oldMove.setDestY(p1Move.getDestY());
@@ -147,6 +147,7 @@ public class Board {
 								if (p1Move.getOrigX() < p1Move.getDestX() )
 								{
 									p1Move.setDestX(p1Move.getDestX() + 1);
+									wentRight = true;
 								}
 								else
 								{
@@ -159,7 +160,23 @@ public class Board {
 									{
 										player2.deletePiece(oldMove);
 										player1.updatePiece(p1Move);
-										//todo: check for potential double hop
+										//todo: check for potential nulti hop
+										//formulate next move
+										p1Move.setOrigX(p1Move.getDestX());
+										p1Move.setOrigY(p1Move.getDestY());
+										p1Move.setDestY(p1Move.getDestY()+1);
+										if (wentRight)
+										{
+											p1Move.setDestX(p1Move.getDestX()-1);
+										}
+										else
+										{
+											p1Move.setDestX(p1Move.getDestX()+1);
+										}
+										if (player2.validateDest(p1Move))
+										{
+											doPlayer1Move(p1Move);
+										}
 									}
 								}
 								
@@ -177,23 +194,23 @@ public class Board {
 		
 	}
 	
-	public void doPlayer2Move()
+	public void doPlayer2Move( Move p2Move)
 	{
-		Move p2Move = player2.makeMove();
+		boolean wentRight = false;
 		if(player2.validateSource(p2Move)) //check if source is a piece in player 1's inventory
 		{
-			System.out.println("Player 2 has piece in inventory");
+			//System.out.println("Player 2 has piece in inventory");
 			if(p2Move.getDestY()-p2Move.getOrigY() == -1) // if destination row is greater than source by 1
 			{
 				if(Math.abs(p2Move.getDestX()-p2Move.getOrigX()) == 1) //if dest col is ofset from source col by 1
 				{
 					if (p2Move.getDestY() >= 0 && p2Move.getDestY() <= 7 && p2Move.getDestX() >= 0 && p2Move.getDestX() <= 7  ) //check if destination is on board
 					{
-						if(!player2.validateDest(p2Move)) //if player 1 doesn't have a piece in destination
+						if(!player2.validateDest(p2Move)) //if player 2 doesn't have a piece in destination
 						{
 							if(player1.validateDest(p2Move))
 							{
-								System.err.println("Player 1 piece detected");
+								//System.err.println("Player 1 piece detected");
 								Move oldMove = new Move();
 								oldMove.setDestX(p2Move.getDestX());
 								oldMove.setDestY(p2Move.getDestY());
@@ -215,6 +232,22 @@ public class Board {
 										player1.deletePiece(oldMove);
 										player2.updatePiece(p2Move);
 										//todo: check for potential double hop
+										p2Move.setOrigX(p2Move.getDestX());
+										p2Move.setOrigY(p2Move.getDestY());
+										p2Move.setDestY(p2Move.getDestY()-1);
+										if (wentRight)
+										{
+											p2Move.setDestX(p2Move.getDestX()-1);
+										}
+										else
+										{
+											p2Move.setDestX(p2Move.getDestX()+1);
+										}
+										
+										if (player1.validateDest(p2Move))
+										{
+											doPlayer2Move(p2Move);
+										}
 									}
 								}
 								

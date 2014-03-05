@@ -12,11 +12,11 @@ public class Main {
 			if (turn % 2 == 0)
 			{
 				
-				theBoard.doPlayer1Move(theBoard.player1.makeMove());
+				theBoard.moveDown(theBoard.player1, theBoard.player1.makeMove());
 			}
 			else
 			{
-				theBoard.doPlayer2Move(theBoard.player2.makeMove());
+				theBoard.moveUp(theBoard.player2, theBoard.player2.makeMove());
 			}
 			turn = turn + 1;
 		}

@@ -8,6 +8,8 @@ public class Player {
 	private String playerName;
 	private Color playerColor;
 	public ArrayList<Piece> pieces;
+	private Boolean moveDir;
+	private int moveFactor; //true for down, false for up
 	private Scanner scanIn = new Scanner(System.in);
 		
 	public String getName()
@@ -108,6 +110,23 @@ public class Player {
 		
 		return false;
 	}
-	
+
+	public Boolean getMoveDir() {
+		return moveDir;
+	}
+
+	public void setMovingDown() {
+		this.moveDir = true;
+		moveFactor = 1;
+	}
+	public void setMovingUp() {
+		this.moveDir = false;
+		moveFactor = -1;
+	}
+
+	public int getMoveFactor() {
+		return moveFactor;
+	}
+
 }
 	

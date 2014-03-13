@@ -10,6 +10,8 @@ public class Board {
 		theBoard = new String[8][8];
 		player1 = new Player(Color.white,"Player 1");
 		player2 = new Player(Color.black, "Player 2");
+		player1.setMovingDown();
+		player2.setMovingUp();
 		initializePlayers();
 		//initialize board to spaces
 		for (int i=0; i<8; i++)
@@ -120,7 +122,7 @@ public class Board {
 		player2.pieces.get(11).setyPos(5);
 	}
 
-	public void moveDown(Player moveMaker, Move theMove)
+	public Boolean makeMove(Player moveMaker, Move theMove, Boolean isHopping)
 	{
 		boolean wentRight = false;
 		Player oppositePlayer;
@@ -138,7 +140,7 @@ public class Board {
 		if(moveMaker.validateSource(theMove)) //check if source is a piece in player 1's inventory
 		{
 			//System.out.println("Player 1 has piece in inventory");
-			if(theMove.getDestY()-theMove.getOrigY() == 1) // if destination row is greater than source
+			if(theMove.getDestY()-theMove.getOrigY() == moveMaker.getMoveFactor()) // if destination row is greater than source
 			{
 				if(Math.abs(theMove.getDestX()-theMove.getOrigX()) == 1) //if dest col is ofset from source col by 1
 				{
@@ -153,7 +155,7 @@ public class Board {
 								oldMove.setDestX(theMove.getDestX());
 								oldMove.setDestY(theMove.getDestY());
 								//if move lands on player 2 piece, check if hop is valid and hop piece
-								theMove.setDestY(theMove.getDestY() + 1);
+								theMove.setDestY(theMove.getDestY() + moveMaker.getMoveFactor());
 								
 								if (theMove.getOrigX() < theMove.getDestX() )
 								{
@@ -194,7 +196,7 @@ public class Board {
 										}
 										if (oppositePlayer.validateDest(theMove))
 										{
-											moveDown(moveMaker,theMove);
+											makeMove(moveMaker,theMove,true);
 										}
 									}
 								}
@@ -213,106 +215,38 @@ public class Board {
 							}
 							
 						}
-					}
-				}
-			}
-		}
-		
-	}
-		
-	public void moveUp(Player moveMaker, Move theMove)
-	{
-		boolean wentRight = false;
-		Player oppositePlayer;
-		
-		if (moveMaker.equals(player1))
-		{
-			oppositePlayer = player2;
-		}
-		else
-		{
-			oppositePlayer = player1;
-		}
-		
-		if(moveMaker.validateSource(theMove)) //check if source is a piece in player 1's inventory
-		{
-			//System.out.println("Player 2 has piece in inventory");
-			if(theMove.getDestY()-theMove.getOrigY() == -1) // if destination row is greater than source by 1
-			{
-				if(Math.abs(theMove.getDestX()-theMove.getOrigX()) == 1) //if dest col is ofset from source col by 1
-				{
-					if (theMove.getDestY() >= 0 && theMove.getDestY() <= 7 && theMove.getDestX() >= 0 && theMove.getDestX() <= 7  ) //check if destination is on board
-					{
-						if(!moveMaker.validateDest(theMove)) //if player 2 doesn't have a piece in destination
+						else if(!isHopping)
 						{
-							if(oppositePlayer.validateDest(theMove))
-							{
-								//System.err.println("Player 1 piece detected");
-								Move oldMove = new Move();
-								oldMove.setDestX(theMove.getDestX());
-								oldMove.setDestY(theMove.getDestY());
-								//if move lands on player 2 piece, check if hop is valid and hop piece
-								theMove.setDestY(theMove.getDestY() - 1);
-								
-								if (theMove.getOrigX() < theMove.getDestX() )
-								{
-									theMove.setDestX(theMove.getDestX() + 1);
-								}
-								else
-								{
-									theMove.setDestX(theMove.getDestX() - 1);
-								}
-								if (theMove.getDestY() >= 0 && theMove.getDestY() <= 7 && theMove.getDestX() >= 0 && theMove.getDestX() <= 7  )
-								{
-									if (!oppositePlayer.validateDest(theMove))
-									{
-										oppositePlayer.deletePiece(oldMove);
-										if (moveMaker.equals(player1))
-										{
-											player1.updatePiece(theMove);
-										}
-										else
-										{
-											player2.updatePiece(theMove);
-										}
-										//todo: check for potential double hop
-										theMove.setOrigX(theMove.getDestX());
-										theMove.setOrigY(theMove.getDestY());
-										theMove.setDestY(theMove.getDestY()-1);
-										if (wentRight)
-										{
-											theMove.setDestX(theMove.getDestX()-1);
-										}
-										else
-										{
-											theMove.setDestX(theMove.getDestX()+1);
-										}
-										
-										if (oppositePlayer.validateDest(theMove))
-										{
-											moveUp(moveMaker,theMove);
-										}
-									}
-								}
-								
-							}
-							else
-							{
-								if (moveMaker.equals(player1))
-								{
-									player1.updatePiece(theMove);
-								}
-								else
-								{
-									player2.updatePiece(theMove);
-								}
-							}
-							
+							System.out.println("Your piece already occupies destination");
+														
 						}
 					}
+					else if(!isHopping)
+					{
+						System.out.println("Move is out of bounds");
+						return false;
+					}
+				}
+				else if(!isHopping)
+				{
+					System.out.println("Move is of invalid x distance");
+					return false;
 				}
 			}
+			else if(!isHopping)
+			{
+				System.out.println("Move is of invalid y distance");
+				return false;
+			}
 		}
+		else if(!isHopping)
+		{
+			System.out.println("Source is not a piece in your inventory");
+			return false;
+		}
+		return true;
+		
 	}
+		
 }
 
